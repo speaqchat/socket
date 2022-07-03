@@ -1,9 +1,12 @@
-import { User } from "./types";
-import { Socket } from "socket.io";
+import { createServer } from "http";
+import { Server, Socket } from "socket.io";
 
-const io = require("socket.io")(process.env.PORT, {
+import { User } from "./types";
+
+const httpServer = createServer();
+const io = new Server(httpServer, {
   cors: {
-    origin: ["https://app.speaq.site"],
+    origin: ["http://localhost:3000", "https://app.speaq.site/"],
   },
 });
 
@@ -34,6 +37,8 @@ io.on("connection", (socket: Socket) => {
 
     console.log(`Sent message to: ${user?.userId} -> ${text}`);
 
+    if (!user) return;
+
     io.to(user?.socketId).emit("getMessage", {
       senderId,
       text,
@@ -44,4 +49,8 @@ io.on("connection", (socket: Socket) => {
     console.log(`${socket.id} disconnected!`);
     removeUser(socket.id);
   });
+});
+
+httpServer.listen(3000, () => {
+  console.log("Socket server started on port 3000");
 });
