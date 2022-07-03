@@ -6,7 +6,7 @@ import { User } from "./types";
 const httpServer = createServer();
 const io = new Server(httpServer, {
   cors: {
-    origin: ["http://localhost:3000", "https://app.speaq.site/"],
+    origin: ["http://localhost:3000", "https://app.speaq.site"],
   },
 });
 
