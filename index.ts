@@ -1,7 +1,7 @@
 import { User } from "./types";
 import { Socket } from "socket.io";
 
-const io = require("socket.io")(8900, {
+const io = require("socket.io")(process.env.PORT, {
   cors: {
     origin: ["https://app.speaq.site"],
   },
