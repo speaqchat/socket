@@ -30,18 +30,21 @@ io.on("connection", (socket: Socket) => {
     addUser(userId, socket.id);
   });
 
-  socket.on("sendMessage", ({ senderId, receiverId, text }) => {
+  socket.on("sendMessage", ({ senderId, receiverId, text, conversationId }) => {
     const user = users.find((user) => {
       return user.userId === receiverId;
     });
 
-    console.log(`Sent message to: ${user?.userId} -> ${text}`);
+    console.log(
+      `Sent message to: ${user?.userId} -> "${text}" in ${conversationId}`
+    );
 
     if (!user) return;
 
-    io.to(user?.socketId).emit("getMessage", {
+    io.to(user.socketId).emit("getMessage", {
       senderId,
       text,
+      conversationId,
     });
   });
 
