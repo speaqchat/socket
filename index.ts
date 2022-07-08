@@ -10,7 +10,7 @@ const io = new Server(httpServer, {
   },
 });
 
-let users = [] as User[];
+let users: User[] = [];
 
 const addUser = (userId: number, socketId: string) => {
   if (!users.some((user) => user.userId === userId)) {
@@ -31,15 +31,13 @@ io.on("connection", (socket: Socket) => {
   });
 
   socket.on("sendMessage", ({ senderId, receiverId, text, conversationId }) => {
-    const user = users.find((user) => {
-      return user.userId === receiverId;
-    });
+    const user = users.find((user) => user.userId === receiverId);
+
+    if (!user) return;
 
     console.log(
       `Sent message to: ${user?.userId} -> "${text}" in ${conversationId}`
     );
-
-    if (!user) return;
 
     io.to(user.socketId).emit("getMessage", {
       senderId,
